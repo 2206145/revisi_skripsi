@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.env
+.env*.local
+*.log
+*.zip
+*.rar
+*.db
+*.sqlite
+public/uploads/

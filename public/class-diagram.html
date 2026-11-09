@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Diagram Rapi (Siap Laporan) - SMK Bina Bhakti</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .wrapper {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .header {
+      background: white;
+      border-radius: 14px;
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .title h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0D704D;
+    }
+    .title p {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 8px 16px;
+      background: #0D704D;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn:hover { background: #0a5c3f; }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .img-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+    .img-box img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .tips {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.875rem;
+      color: #166534;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="title">
+        <h1>Class Diagram UML (Format Kompak & Rapi)</h1>
+        <p>SMK Bina Bhakti Mekarmukti &bull; Standar Laporan Skripsi</p>
+      </div>
+      <div class="actions">
+        <a href="/class_diagram_awal.jpg" download="Class_Diagram_Awal_SMK_Bina_Bhakti.jpg" class="btn">
+          📥 Unduh Gambar Awal (JPG)
+        </a>
+        <a href="/class_diagram_compact.jpg" download="Class_Diagram_Kompak_SMK_Bina_Bhakti.jpg" class="btn btn-secondary">
+          📥 Unduh Versi Kompak
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="img-box">
+        <img src="/class_diagram_awal.jpg" alt="Class Diagram Awal SMK Bina Bhakti" id="diagramImg">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

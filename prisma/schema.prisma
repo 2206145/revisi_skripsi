@@ -1,0 +1,194 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  LULUSAN
+  PERUSAHAAN
+  KEPALA_SEKOLAH
+}
+
+enum StatusLulusan {
+  BEKERJA
+  KULIAH
+  WIRAUSAHA
+  BELUM_BEKERJA
+}
+
+model User {
+  id         String      @id @default(cuid())
+  nomorId    Int         @default(autoincrement())
+  email      String      @unique
+  password   String
+  role       Role
+  nama       String?
+  noHp       String?
+  alamat     String?
+  createdAt  DateTime    @default(now())
+  lulusan    Lulusan?
+  perusahaan Perusahaan?
+}
+
+model Jurusan {
+  id       String     @id @default(cuid())
+  nomorId  Int        @default(autoincrement())
+  kode     String     @unique
+  nama     String     @unique
+  lulusan  Lulusan[]
+  lowongan Lowongan[]
+}
+
+model Lulusan {
+  id          String       @id @default(cuid())
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nis         String?      @unique
+  nama        String
+  jenisKelamin String?
+  jurusanId   String?
+  jurusan     Jurusan?     @relation(fields: [jurusanId], references: [id])
+  tahunMasuk  Int?
+  tahunLulus  Int?
+  noHp        String?
+  alamat      String?
+  tracerStudy TracerStudy?
+  lamaran     Lamaran[]
+  portofolio  Portofolio[]
+  createdAt   DateTime     @default(now())
+}
+
+model TracerStudy {
+  id                String        @id @default(cuid())
+  lulusanId         String        @unique
+  lulusan           Lulusan       @relation(fields: [lulusanId], references: [id], onDelete: Cascade)
+  status            StatusLulusan
+  // Data Pekerjaan
+  pernahMelamar     String?
+  jenisPekerjaan    String?
+  namaPerusahaan    String?
+  alamatInstansi    String?
+  jabatan           String?
+  deskripsiPekerjaan String?
+  masaKerja         String?
+  mulaiKerja        String?
+  sesuaiKeahlian    String?
+  masaTunggu        String?
+  gaji              String?
+  lokasiKerja       String?
+  latitude          Float?
+  longitude         Float?
+  // Data Kuliah
+  namaKampus        String?
+  alamatUniversitas String?
+  jurusanStudi      String?
+  bulanTahunStudi   String?
+  // Wirausaha
+  namaUsaha         String?
+  bidangUsaha       String?
+  omsetUsaha        String? // "< Rp 1 Juta" | "Rp 1-3 Juta" | "Rp 3-5 Juta" | "> Rp 5 Juta"
+  linkUsaha         String? // URL media sosial / e-commerce
+  // Belum Bekerja
+  terakhirBekerja      String?
+  belumPernahBekerja   String? // "Ya" jika belum pernah bekerja sama sekali
+  kegiatanSaatIni      String?
+  alasanBelumBekerja   String? // alasan utama belum bekerja
+  aktifMencariKerja    String? // tingkat keaktifan mencari kerja
+  saluranPencarianKerja String? // saluran utama pencarian kerja
+  upayaPeningkatan     String? // upaya peningkatan diri saat ini
+  // Sertifikat
+  pemilikSertifikat String? // "Ya" | "Tidak"
+  jenisSertifikat   String? // JSON array: ["SMK","PEMERINTAH","LEMBAGA_KURSUS"]
+  // Keterangan umum
+  keterangan        String?
+  updatedAt         DateTime      @updatedAt
+  createdAt         DateTime      @default(now())
+}
+
+model Perusahaan {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nama      String
+  bidang    String?
+  alamat    String?
+  kota      String?
+  telepon   String?
+  website   String?
+  deskripsi String?
+  latitude  Float?
+  longitude Float?
+  lowongan  Lowongan[]
+  createdAt DateTime   @default(now())
+}
+
+model Lowongan {
+  id           String     @id @default(cuid())
+  perusahaanId String
+  perusahaan   Perusahaan @relation(fields: [perusahaanId], references: [id], onDelete: Cascade)
+  jurusanId    String?
+  jurusan      Jurusan?   @relation(fields: [jurusanId], references: [id])
+  judul        String
+  deskripsi    String
+  persyaratan  String?
+  gaji         String?
+  deadline     DateTime?
+  isActive     Boolean    @default(true)
+  lamaran      Lamaran[]
+  createdAt    DateTime   @default(now())
+}
+
+model Lamaran {
+  id         String   @id @default(cuid())
+  lulusanId  String
+  lulusan    Lulusan  @relation(fields: [lulusanId], references: [id], onDelete: Cascade)
+  lowonganId String
+  lowongan   Lowongan @relation(fields: [lowonganId], references: [id], onDelete: Cascade)
+  status     String   @default("MENUNGGU")
+  createdAt  DateTime @default(now())
+
+  @@unique([lulusanId, lowonganId])
+}
+
+model Portofolio {
+  id          String   @id @default(cuid())
+  lulusanId   String
+  lulusan     Lulusan  @relation(fields: [lulusanId], references: [id], onDelete: Cascade)
+  judul       String
+  kategori    String   // Proyek | Sertifikat | Prestasi | Pengalaman | Karya Tulis | Lainnya
+  deskripsi   String?
+  fileUrl     String?  // path file yang diupload, misal: /uploads/portofolio/xxx.pdf
+  namaFile    String?  // nama asli file yang diupload
+  tipeFile    String?  // mime type: application/pdf | image/jpeg | image/png
+  keahlian    String?  // comma-separated: "Desain, Komunikasi, Komputer"
+  tahun       Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+model Pengaturan {
+  id              String  @id @default("1")
+  alamat          String? @default("Jl. Contoh No. 1, Mekarmukti")
+  email           String? @default("bkk@smkbinabhakti.sch.id")
+  whatsapp        String? @default("6281234567890")
+  telepon         String? @default("022-1234567")
+  logoUrl         String? @default("/logo_smk.png") // menyimpan base64 image atau path logo default
+  heroTitle       String? @default("Sistem Informasi Tracer Study & Bursa Kerja")
+  heroDesc        String? @default("Platform digital resmi SMK Bina Bhakti Mekarmukti untuk tracer study lulusan, pengelolaan lowongan kerja, dan analitik karir lulusan.")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
